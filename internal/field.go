@@ -40,7 +40,7 @@ func CreateEmptyField(rows, cols int) Grid {
 	return newGrid
 }
 
-func (g *Grid) GetSnake(s Snake, p1, p2 int) {
+func (g *Grid) GetSnake(s Snake) {
 	// NEED TO CHANGE
 	for i := 0; i < len(g.Mat); i++ {
 		for j := 0; j < len(g.Mat[i]); j++ {
@@ -48,14 +48,6 @@ func (g *Grid) GetSnake(s Snake, p1, p2 int) {
 				if i == snakeCell.X && j == snakeCell.Y {
 					g.Mat[i][j] = snakeCell
 					break
-				} else if p1 == i && p2 == j {
-					g.Mat[i][j] = &Cell{
-						Value:   '*',
-						X:       i,
-						Y:       j,
-						CanWalk: true,
-						CanEat:  true,
-					}
 				} else {
 					g.Mat[i][j] = &Cell{
 						Value:   '#',
@@ -70,7 +62,7 @@ func (g *Grid) GetSnake(s Snake, p1, p2 int) {
 	}
 }
 
-func (g *Grid) GenerateFood() (int, int) {
+func (g *Grid) GenerateFood() *Cell {
 	var emptyCells []*Cell = make([]*Cell, 0)
 	for i := range g.Mat {
 		for j := range g.Mat[i] {
@@ -84,7 +76,7 @@ func (g *Grid) GenerateFood() (int, int) {
 	g.Mat[emptyCells[rndPos].X][emptyCells[rndPos].Y].CanEat = true
 	g.Mat[emptyCells[rndPos].X][emptyCells[rndPos].Y].Value = '*'
 
-	return emptyCells[rndPos].X, emptyCells[rndPos].Y
+	return g.Mat[emptyCells[rndPos].X][emptyCells[rndPos].Y]
 }
 
 func (g *Grid) DisplayGrid() {

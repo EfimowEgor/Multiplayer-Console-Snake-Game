@@ -24,8 +24,8 @@ func main() {
 	// ----------
 	snake := internal.InitSnake(rows, cols)
 	g := internal.CreateEmptyField(rows, cols)
-	foodPosX, foodPosY := g.GenerateFood()
-	g.GetSnake(*snake, foodPosX, foodPosY)
+	// food := g.GenerateFood()
+	g.GetSnake(*snake)
 	g.DisplayGrid()
 	// CONTROL CHANNELS
 	// ----------
@@ -57,7 +57,7 @@ func main() {
 					close(STPRDCH)
 					return
 				}
-				g.GetSnake(*snake, foodPosX, foodPosY)
+				g.GetSnake(*snake)
 				g.DisplayGrid()
 				time.Sleep(time.Millisecond * updateFreq)
 			}
