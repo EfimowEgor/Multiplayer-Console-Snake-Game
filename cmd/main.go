@@ -19,12 +19,12 @@ func main() {
 	// ----------
 	cols = 17
 	rows = 17
-	updateFreq = 1000
+	updateFreq = 200
 	// GAME OBJECTS
 	// ----------
 	snake := internal.InitSnake(rows, cols)
 	g := internal.CreateEmptyField(rows, cols)
-	// food := g.GenerateFood()
+	g.Food = g.GenerateFood()
 	g.GetSnake(*snake)
 	g.DisplayGrid()
 	// CONTROL CHANNELS
@@ -58,6 +58,11 @@ func main() {
 					return
 				}
 				g.GetSnake(*snake)
+				if g.Food != nil {
+					g.GetFood()
+				} else {
+					g.Food = g.GenerateFood()
+				}
 				g.DisplayGrid()
 				time.Sleep(time.Millisecond * updateFreq)
 			}

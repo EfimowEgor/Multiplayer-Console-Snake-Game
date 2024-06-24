@@ -55,6 +55,10 @@ func InitSnake(matX, matY int) *Snake {
 	return snake
 }
 
+func Name () {
+
+}
+
 func (s *Snake) Move(height, width int, g *Grid) error {
 	// MOVE BODY
 	for i := len(s.Body) - 1; i > 0; i-- {
@@ -85,6 +89,7 @@ func (s *Snake) Move(height, width int, g *Grid) error {
 	var newTailX, newTailY int =  s.Body[0].X,  s.Body[0].Y
 
 	if g.Mat[newHeadPosX][newHeadPosY].CanEat {
+		g.Food = nil
 		s.Body = append(s.Body, &Cell{
 			Value:   'O',
 			X:       newTailX,
@@ -92,8 +97,8 @@ func (s *Snake) Move(height, width int, g *Grid) error {
 			CanWalk: false,
 			CanEat:  false,
 		})
+
 		g.Mat[newHeadPosX][newHeadPosY].CanEat = false
-		g.Mat[newHeadPosX][newHeadPosY].Value = '#'
 	}
 
 	// MOVE HEAD

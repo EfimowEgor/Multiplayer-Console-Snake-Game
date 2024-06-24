@@ -3,6 +3,13 @@ package internal
 import (
 	"fmt"
 	"math/rand"
+	"strings"
+)
+
+const (
+	colorRed   = "\033[0;31m"
+	colorGreen = "\033[0;32m"
+	colorNone  = "\033[0m"
 )
 
 type Cell struct {
@@ -14,7 +21,8 @@ type Cell struct {
 }
 
 type Grid struct {
-	Mat [][]*Cell
+	Mat  [][]*Cell
+	Food *Cell
 }
 
 func CreateEmptyField(rows, cols int) Grid {
@@ -62,6 +70,11 @@ func (g *Grid) GetSnake(s Snake) {
 	}
 }
 
+func (g *Grid) GetFood() {
+	g.Mat[g.Food.X][g.Food.Y].Value = '*'
+	g.Mat[g.Food.X][g.Food.Y].CanEat = true
+}
+
 func (g *Grid) GenerateFood() *Cell {
 	var emptyCells []*Cell = make([]*Cell, 0)
 	for i := range g.Mat {
@@ -82,9 +95,16 @@ func (g *Grid) GenerateFood() *Cell {
 func (g *Grid) DisplayGrid() {
 	for i := range g.Mat {
 		for j := range g.Mat[i] {
-			fmt.Printf("%*c", 2, g.Mat[i][j].Value)
+			switch {
+			case g.Mat[i][j].Value == '*':
+				fmt.Printf("\033[0;31m %*c", 2, g.Mat[i][j].Value)
+			case g.Mat[i][j].Value == 'O' || strings.ContainsRune("^<>v", rune(g.Mat[i][j].Value)):
+				fmt.Printf("\033[0;32m %*c", 2, g.Mat[i][j].Value)
+			case g.Mat[i][j].Value == '#':
+				fmt.Printf("\033[0;37m %*c", 2, g.Mat[i][j].Value)
+			}
 		}
 		fmt.Printf("\n")
 	}
-	fmt.Printf("\033[H\n")
+	fmt.Printf("\033[H")
 }
