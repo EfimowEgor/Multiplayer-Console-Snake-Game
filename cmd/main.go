@@ -24,8 +24,8 @@ func main() {
 	// ----------
 	snake := internal.InitSnake(rows, cols)
 	g := internal.CreateEmptyField(rows, cols)
-	g.Food = g.GenerateFood()
 	g.GetSnake(*snake)
+	g.Food = g.GenerateFood()
 	g.DisplayGrid()
 	// CONTROL CHANNELS
 	// ----------

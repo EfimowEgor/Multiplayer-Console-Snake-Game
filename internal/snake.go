@@ -55,10 +55,6 @@ func InitSnake(matX, matY int) *Snake {
 	return snake
 }
 
-func Name () {
-
-}
-
 func (s *Snake) Move(height, width int, g *Grid) error {
 	// MOVE BODY
 	for i := len(s.Body) - 1; i > 0; i-- {
