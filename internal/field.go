@@ -6,12 +6,6 @@ import (
 	"strings"
 )
 
-const (
-	colorRed   = "\033[0;31m"
-	colorGreen = "\033[0;32m"
-	colorNone  = "\033[0m"
-)
-
 type Cell struct {
 	Value   byte
 	X       int
