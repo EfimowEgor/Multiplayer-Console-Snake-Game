@@ -29,7 +29,7 @@ type Snake struct {
 }
 
 func InitSnake(matX, matY int) *Snake {
-	var length int = 5
+	var length int = 3
 	var initX, initY int
 	initX = (matX - 1) / 2
 	initY = (matY - 1) / 2

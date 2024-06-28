@@ -86,19 +86,22 @@ func (g *Grid) GenerateFood() *Cell {
 	return g.Mat[emptyCells[rndPos].X][emptyCells[rndPos].Y]
 }
 
-func (g *Grid) DisplayGrid() {
+func (g *Grid) DisplayGrid() string {
+	var mat string
 	for i := range g.Mat {
 		for j := range g.Mat[i] {
 			switch {
 			case g.Mat[i][j].Value == '*':
-				fmt.Printf("\033[0;31m %*c", 2, g.Mat[i][j].Value)
+				mat += fmt.Sprintf("\033[0;31m %*c", 1, g.Mat[i][j].Value)
 			case g.Mat[i][j].Value == 'O' || strings.ContainsRune("^<>v", rune(g.Mat[i][j].Value)):
-				fmt.Printf("\033[0;32m %*c", 2, g.Mat[i][j].Value)
+				mat += fmt.Sprintf("\033[0;32m %*c", 1, g.Mat[i][j].Value)
 			case g.Mat[i][j].Value == '#':
-				fmt.Printf("\033[0;37m %*c", 2, g.Mat[i][j].Value)
+				mat += fmt.Sprintf("\033[0;37m %*c", 1, g.Mat[i][j].Value)
 			}
 		}
-		fmt.Printf("\n")
+		mat += "\r\n"
 	}
-	fmt.Printf("\033[H")
+	mat += "\033[H"
+	
+	return mat
 }
