@@ -1,4 +1,4 @@
-package internal
+package services
 
 type Dir byte
 
