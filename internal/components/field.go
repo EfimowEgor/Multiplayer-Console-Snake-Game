@@ -88,6 +88,7 @@ func (g *Grid) GenerateFood() *Cell {
 
 func (g *Grid) DisplayGrid() string {
 	var mat string
+	mat += "\033[H\033[J"
 	for i := range g.Mat {
 		for j := range g.Mat[i] {
 			switch {
@@ -101,7 +102,6 @@ func (g *Grid) DisplayGrid() string {
 		}
 		mat += "\r\n"
 	}
-	mat += "\033[H"
 	
 	return mat
 }

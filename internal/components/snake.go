@@ -66,7 +66,7 @@ func (s *Snake) Move(height, width int, g *Grid) error {
 	newHeadPosX := s.Body[0].X - MVMAT[s.Direction][1]
 
 	// CHECK OUT OF BOUNDS
-	if newHeadPosY < 0 || newHeadPosY > height || newHeadPosX > width || newHeadPosX < 0 {
+	if newHeadPosY < 0 || newHeadPosY > width || newHeadPosX > height || newHeadPosX < 0 {
 		return CustomError{
 			Info: "OUT OF BOUNDS OF GRID",
 			Data: *s.Body[0],
