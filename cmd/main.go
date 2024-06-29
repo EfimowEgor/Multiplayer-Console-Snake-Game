@@ -8,6 +8,8 @@ import (
 )
 
 func main() {
+	pool := network.InitConnPool()
+
 	ADDR := config.ServerConfig.ADDR
 	PORT := config.ServerConfig.PORT
 	proto := config.ServerConfig.Proto
@@ -23,6 +25,6 @@ func main() {
 			continue
 		}
 		log.Print(conn.LocalAddr().String())
-		go network.HandleConnection(conn)
+		go network.HandleConnection(conn, pool)
 	}
 }
