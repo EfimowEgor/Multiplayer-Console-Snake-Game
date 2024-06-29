@@ -1,5 +1,7 @@
 package services
 
+import "snake/internal/config"
+
 type Dir byte
 
 const (
@@ -8,6 +10,8 @@ const (
 	LEFT  Dir = 'A'
 	RIGHT Dir = 'D'
 )
+
+const HEADS = "^<>v"
 
 var HEAD map[Dir]byte = map[Dir]byte{
 	UP:    '^',
@@ -42,7 +46,7 @@ func InitSnake(matX, matY int) *Snake {
 		if i == 0 {
 			val = HEAD[snake.Direction]
 		} else {
-			val = 'O'
+			val = config.BodySumbol
 		}
 		snake.Body[i] = &Cell{
 			Value:   val,
@@ -87,7 +91,7 @@ func (s *Snake) Move(height, width int, g *Grid) error {
 	if g.Mat[newHeadPosX][newHeadPosY].CanEat {
 		g.Food = nil
 		s.Body = append(s.Body, &Cell{
-			Value:   'O',
+			Value:   config.BodySumbol,
 			X:       newTailX,
 			Y:       newTailY,
 			CanWalk: false,

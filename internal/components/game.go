@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"net"
+	"snake/internal/config"
 	"sync"
 	"time"
 	"unicode"
@@ -23,11 +24,10 @@ func GameLoop(g Grid, snake *Snake, conn net.Conn,
 			}
 		default:
 			// MOVE SNAKE
-			err := snake.Move(len(g.Mat)-1, len(g.Mat[0])-1, &g)
+			err := snake.Move(config.GameConfig.ROWS-1, config.GameConfig.COLS-1, &g)
 			if errors.Is(err, CustomError{Info: "OUT OF BOUNDS OF GRID", Data: *snake.Body[0]}) ||
 				errors.Is(err, CustomError{Info: "HIT THE BODY", Data: *snake.Body[0]}) {
-					// log.Fatal(err)
-				mat := "\033[H\033[JYOU'VE LOST\r\nPRESS ANY KEY TO CONTINUE\n"
+				mat := config.ReturnClearScreen + "YOU'VE LOST" + config.CRLF +"PRESS ANY KEY TO CONTINUE\n"
 				_, err = conn.Write([]byte(mat))
 				if err != nil {
 					panic(err)

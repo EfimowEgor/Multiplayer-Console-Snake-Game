@@ -2,9 +2,10 @@ package network
 
 import (
 	"log"
-	"sync"
 	"net"
+	"snake/internal/config"
 	"strings"
+	"sync"
 )
 
 func HandleUserInput(conn net.Conn, STPLSCH chan struct{}, STPRDCH chan struct{}, MVCH chan rune, wg *sync.WaitGroup) {
@@ -24,7 +25,7 @@ func HandleUserInput(conn net.Conn, STPLSCH chan struct{}, STPRDCH chan struct{}
 			if char == 'q' {
 				close(STPLSCH)
 				close(MVCH)
-				conn.Write([]byte("\033[H\033[JGAME STOPPED\n"))
+				conn.Write([]byte(config.ReturnClearScreen + "GAME STOPPED\n"))
 				return
 			}
 		}

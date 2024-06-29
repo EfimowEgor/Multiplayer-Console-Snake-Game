@@ -2,15 +2,17 @@ package network
 
 import (
 	"net"
-	"snake/internal/services"
+	"snake/internal/config"
+	"snake/internal/components"
 	"sync"
 )
 
 func HandleConnection(conn net.Conn) {
 	defer conn.Close()
 
-	// Вынести в конфиг
-	rows, cols := 17, 17
+	rows := config.GameConfig.ROWS
+	cols := config.GameConfig.COLS
+	speed := config.GameConfig.SPEED
 
 	// for every new connection init game
 	snake := services.InitSnake(rows, cols)
@@ -30,10 +32,10 @@ func HandleConnection(conn net.Conn) {
 
 	var wg sync.WaitGroup
 	wg.Add(2)
-	
-	go services.GameLoop(g, snake, conn, STPLSCH, STPRDCH, MVCH, &wg, 250)
+
+	go services.GameLoop(g, snake, conn, STPLSCH, STPRDCH, MVCH, &wg, speed)
 
 	go HandleUserInput(conn, STPLSCH, STPRDCH, MVCH, &wg)
-	
+
 	wg.Wait()
 }
