@@ -1,8 +1,9 @@
-package internal
+package services
 
 import (
 	"fmt"
 	"math/rand"
+	"snake/internal/config"
 	"strings"
 )
 
@@ -20,18 +21,17 @@ type Grid struct {
 }
 
 func CreateEmptyField(rows, cols int) Grid {
-	// Create 2D slice
 	newGrid := Grid{
 		Mat: make([][]*Cell, rows),
 	}
 	for i := range newGrid.Mat {
 		newGrid.Mat[i] = make([]*Cell, cols)
 	}
-	// Fill 2D slice with '#'
-	for i := range newGrid.Mat {
-		for j := range newGrid.Mat[i] {
+	// Fill grid
+	for i := range rows {
+		for j := range cols {
 			newGrid.Mat[i][j] = &Cell{
-				Value:   '#',
+				Value:   config.FieldSymbol,
 				X:       i,
 				Y:       j,
 				CanWalk: true,
@@ -43,7 +43,6 @@ func CreateEmptyField(rows, cols int) Grid {
 }
 
 func (g *Grid) GetSnake(s Snake) {
-	// NEED TO CHANGE
 	for i := 0; i < len(g.Mat); i++ {
 		for j := 0; j < len(g.Mat[i]); j++ {
 			for _, snakeCell := range s.Body {
@@ -52,7 +51,7 @@ func (g *Grid) GetSnake(s Snake) {
 					break
 				} else {
 					g.Mat[i][j] = &Cell{
-						Value:   '#',
+						Value:   config.FieldSymbol,
 						X:       i,
 						Y:       j,
 						CanWalk: true,
@@ -65,7 +64,7 @@ func (g *Grid) GetSnake(s Snake) {
 }
 
 func (g *Grid) GetFood() {
-	g.Mat[g.Food.X][g.Food.Y].Value = '*'
+	g.Mat[g.Food.X][g.Food.Y].Value = config.FoodSymbol
 	g.Mat[g.Food.X][g.Food.Y].CanEat = true
 }
 
@@ -81,24 +80,28 @@ func (g *Grid) GenerateFood() *Cell {
 	rndPos := rand.Intn(len(emptyCells))
 
 	g.Mat[emptyCells[rndPos].X][emptyCells[rndPos].Y].CanEat = true
-	g.Mat[emptyCells[rndPos].X][emptyCells[rndPos].Y].Value = '*'
+	g.Mat[emptyCells[rndPos].X][emptyCells[rndPos].Y].Value = config.FoodSymbol
 
 	return g.Mat[emptyCells[rndPos].X][emptyCells[rndPos].Y]
 }
 
-func (g *Grid) DisplayGrid() {
+func (g *Grid) DisplayGrid() string {
+	var mat string
+	var spaceBetween = config.GameConfig.FieldSpace
+	mat += config.ReturnClearScreen
 	for i := range g.Mat {
 		for j := range g.Mat[i] {
 			switch {
-			case g.Mat[i][j].Value == '*':
-				fmt.Printf("\033[0;31m %*c", 2, g.Mat[i][j].Value)
-			case g.Mat[i][j].Value == 'O' || strings.ContainsRune("^<>v", rune(g.Mat[i][j].Value)):
-				fmt.Printf("\033[0;32m %*c", 2, g.Mat[i][j].Value)
-			case g.Mat[i][j].Value == '#':
-				fmt.Printf("\033[0;37m %*c", 2, g.Mat[i][j].Value)
+			case g.Mat[i][j].Value == config.FoodSymbol:
+				mat += fmt.Sprintf("%s%*c", config.FoodColor, spaceBetween, g.Mat[i][j].Value)
+			case g.Mat[i][j].Value == config.BodySumbol || strings.ContainsRune(HEADS, rune(g.Mat[i][j].Value)):
+				mat += fmt.Sprintf("%s%*c", config.SnakeColor, spaceBetween, g.Mat[i][j].Value)
+			case g.Mat[i][j].Value == config.FieldSymbol:
+				mat += fmt.Sprintf("%s%*c", config.GridColor, spaceBetween, g.Mat[i][j].Value)
 			}
 		}
-		fmt.Printf("\n")
+		mat += config.CRLF
 	}
-	fmt.Printf("\033[H")
+
+	return mat
 }

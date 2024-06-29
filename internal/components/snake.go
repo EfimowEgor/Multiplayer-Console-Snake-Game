@@ -1,4 +1,6 @@
-package internal
+package services
+
+import "snake/internal/config"
 
 type Dir byte
 
@@ -8,6 +10,8 @@ const (
 	LEFT  Dir = 'A'
 	RIGHT Dir = 'D'
 )
+
+const HEADS = "^<>v"
 
 var HEAD map[Dir]byte = map[Dir]byte{
 	UP:    '^',
@@ -29,7 +33,7 @@ type Snake struct {
 }
 
 func InitSnake(matX, matY int) *Snake {
-	var length int = 5
+	var length int = 3
 	var initX, initY int
 	initX = (matX - 1) / 2
 	initY = (matY - 1) / 2
@@ -42,7 +46,7 @@ func InitSnake(matX, matY int) *Snake {
 		if i == 0 {
 			val = HEAD[snake.Direction]
 		} else {
-			val = 'O'
+			val = config.BodySumbol
 		}
 		snake.Body[i] = &Cell{
 			Value:   val,
@@ -66,7 +70,7 @@ func (s *Snake) Move(height, width int, g *Grid) error {
 	newHeadPosX := s.Body[0].X - MVMAT[s.Direction][1]
 
 	// CHECK OUT OF BOUNDS
-	if newHeadPosY < 0 || newHeadPosY > height || newHeadPosX > width || newHeadPosX < 0 {
+	if newHeadPosY < 0 || newHeadPosY > width || newHeadPosX > height || newHeadPosX < 0 {
 		return CustomError{
 			Info: "OUT OF BOUNDS OF GRID",
 			Data: *s.Body[0],
@@ -87,7 +91,7 @@ func (s *Snake) Move(height, width int, g *Grid) error {
 	if g.Mat[newHeadPosX][newHeadPosY].CanEat {
 		g.Food = nil
 		s.Body = append(s.Body, &Cell{
-			Value:   'O',
+			Value:   config.BodySumbol,
 			X:       newTailX,
 			Y:       newTailY,
 			CanWalk: false,
