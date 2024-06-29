@@ -1,25 +1,22 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net"
 	"os"
+	"snake/internal/config"
 	"snake/internal/network"
-
-	"github.com/joho/godotenv"
 )
 
-func init() {
-	// loads values from .env into the system
-	if err := godotenv.Load(); err != nil {
-		fmt.Print("No .env file found")
-	}
-}
-
 func main() {
+	err := config.LoadEnv()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	ADDR, _ := os.LookupEnv("ADDR")
 	PORT, _ := os.LookupEnv("PORT")
-	fmt.Println(ADDR + ":" + PORT)
+
 	l, err := net.Listen("tcp", ADDR+":"+PORT)
 	if err != nil {
 		panic(err)
@@ -29,6 +26,7 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+		log.Print(conn.LocalAddr().String())
 		go network.HandleConnection(conn)
 	}
 }
