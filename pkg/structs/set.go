@@ -1,5 +1,10 @@
 package structs
 
+import (
+	"fmt"
+	"strings"
+)
+
 type Set[T comparable] struct {
 	data map[T]struct{}
 }
@@ -53,4 +58,12 @@ func SetIntersection[T comparable](l, r Set[T]) Set[T] {
 		}
 	}
 	return setIntersection
+}
+
+func (set *Set[T]) String() string {
+	var res strings.Builder
+	for k := range set.data {
+		res.WriteString(fmt.Sprintf("%v", k))
+	}
+	return res.String()
 }

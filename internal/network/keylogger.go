@@ -20,13 +20,22 @@ func HandleUserInput(conn net.Conn, STPLSCH chan struct{}, STPRDCH chan struct{}
 		log.Printf("READ: %c\n", buf)
 		select {
 		case <-STPRDCH:
-			pool.DeleteConnection(conn)
-			log.Printf("ConnPool after manually closed: %s", pool)
+			pool.Lock()
+			err := pool.DeleteConnection(conn)
+			pool.Unlock()
+			if err != nil {
+				log.Printf("Tried to delete connection %s from pool, but it is not in the %s. Conn closed%s",
+							conn.LocalAddr().String(), pool, config.CRLF)
+				return
+			}
+			log.Printf("ConnPool after lose: %s", pool)
 			return
 		default:
 			if char == 'q' {
+				pool.Lock()
 				pool.DeleteConnection(conn)
-				log.Printf("ConnPool after lose: %s", pool)
+				pool.Unlock()
+				log.Printf("ConnPool after manually closed: %s", pool)
 				close(STPLSCH)
 				close(MVCH)
 				conn.Write([]byte(config.ReturnClearScreen + "GAME STOPPED\n"))

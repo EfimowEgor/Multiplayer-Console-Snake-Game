@@ -5,11 +5,15 @@ import (
 	"fmt"
 	"net"
 	"snake/pkg/structs"
+	"sync"
 )
 
 // Pool implements collection to store incoming connetion data (addr, etc)
 // It is required to check if connection unique.
 type Pool struct {
+	LobbyID  string
+	
+	sync.Mutex
 	ConnPool structs.Set[string]
 }
 
@@ -22,14 +26,18 @@ func InitConnPool() *Pool {
 
 func (p *Pool) AddConnection(conn net.Conn) error {
 	if p.ConnPool.Find(conn.LocalAddr().String()) {
-		return errors.New("connection already added")
+		return fmt.Errorf("already connected")
 	}
 	p.ConnPool.Add(conn.LocalAddr().String())
 	return nil
 }
 
-func (p *Pool) DeleteConnection(conn net.Conn) {
+func (p *Pool) DeleteConnection(conn net.Conn) error {
+	if !p.ConnPool.Find(conn.LocalAddr().String()) {
+		return errors.New("connection not in the pool")
+	}
 	p.ConnPool.Remove(conn.LocalAddr().String())
+	return nil
 }
 
 func (p *Pool) String() string {
