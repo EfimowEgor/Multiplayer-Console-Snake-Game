@@ -40,7 +40,7 @@ func init() {
 	if err != nil {
 		log.Fatal("cannot parse number of cols")
 	}
-	snakeLen, err := strconv.Atoi(getEnv("COLS"))
+	snakeLen, err := strconv.Atoi(getEnv("SIZE"))
 	if err != nil {
 		log.Fatal("cannot parse snake length")
 	}

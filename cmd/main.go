@@ -24,7 +24,7 @@ func main() {
 			log.Fatal(err)
 			continue
 		}
-		log.Print(conn.LocalAddr().String())
+		log.Print(conn.RemoteAddr().String())
 		go network.HandleConnection(conn, pool)
 	}
 }

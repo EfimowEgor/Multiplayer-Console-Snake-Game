@@ -22,9 +22,10 @@ func HandleConnection(conn net.Conn, pool *Pool) {
 	rows := config.GameConfig.ROWS
 	cols := config.GameConfig.COLS
 	speed := config.GameConfig.SPEED
+	length := config.GameConfig.LEN
 
 	// for every new connection init game
-	snake := components.InitSnake(rows, cols)
+	snake := components.InitSnake(rows, cols, length)
 	g := components.CreateEmptyField(rows, cols)
 	g.GetSnake(*snake)
 	g.Food = g.GenerateFood()

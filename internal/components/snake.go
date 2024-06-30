@@ -32,8 +32,8 @@ type Snake struct {
 	Direction Dir
 }
 
-func InitSnake(matX, matY int) *Snake {
-	var length int = 3
+func InitSnake(matX, matY, l int) *Snake {
+	var length int = l
 	var initX, initY int
 	initX = (matX - 1) / 2
 	initY = (matY - 1) / 2
