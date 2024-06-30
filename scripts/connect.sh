@@ -1,0 +1,1 @@
+stty raw; { echo -n "<?+>msg"; cat; } | nc 0.0.0.0 3000; stty sane; clear
