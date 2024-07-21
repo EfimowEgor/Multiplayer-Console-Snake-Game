@@ -16,6 +16,7 @@ func HandleUserInput(conn net.Conn, STPLSCH chan struct{}, STPRDCH chan struct{}
 		if err != nil {
 			panic(err)
 		}
+		log.Printf("%s", buf)
 		char := rune(buf[0])
 		log.Printf("READ: %c\n", buf)
 		select {
@@ -23,11 +24,13 @@ func HandleUserInput(conn net.Conn, STPLSCH chan struct{}, STPRDCH chan struct{}
 			pool.Lock()
 			err := pool.DeleteConnection(conn)
 			pool.Unlock()
+
 			if err != nil {
 				log.Printf("Tried to delete connection %s from pool, but it is not in the %s. Conn closed%s",
-							conn.LocalAddr().String(), pool, config.CRLF)
+							conn.RemoteAddr().String(), pool, config.CRLF)
 				return
 			}
+			
 			log.Printf("ConnPool after lose: %s", pool)
 			return
 		default:
@@ -35,10 +38,14 @@ func HandleUserInput(conn net.Conn, STPLSCH chan struct{}, STPRDCH chan struct{}
 				pool.Lock()
 				pool.DeleteConnection(conn)
 				pool.Unlock()
+
 				log.Printf("ConnPool after manually closed: %s", pool)
+
 				close(STPLSCH)
 				close(MVCH)
+
 				conn.Write([]byte(config.ReturnClearScreen + "GAME STOPPED\n"))
+
 				return
 			}
 		}

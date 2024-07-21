@@ -25,18 +25,18 @@ func InitConnPool() *Pool {
 }
 
 func (p *Pool) AddConnection(conn net.Conn) error {
-	if p.ConnPool.Find(conn.LocalAddr().String()) {
+	if p.ConnPool.Find(conn.RemoteAddr().String()) {
 		return fmt.Errorf("already connected")
 	}
-	p.ConnPool.Add(conn.LocalAddr().String())
+	p.ConnPool.Add(conn.RemoteAddr().String())
 	return nil
 }
 
 func (p *Pool) DeleteConnection(conn net.Conn) error {
-	if !p.ConnPool.Find(conn.LocalAddr().String()) {
+	if !p.ConnPool.Find(conn.RemoteAddr().String()) {
 		return errors.New("connection not in the pool")
 	}
-	p.ConnPool.Remove(conn.LocalAddr().String())
+	p.ConnPool.Remove(conn.RemoteAddr().String())
 	return nil
 }
 

@@ -63,7 +63,7 @@ func SetIntersection[T comparable](l, r Set[T]) Set[T] {
 func (set *Set[T]) String() string {
 	var res strings.Builder
 	for k := range set.data {
-		res.WriteString(fmt.Sprintf("%v", k))
+		res.WriteString(fmt.Sprintf("%v\n", k))
 	}
 	return res.String()
 }
